@@ -25,7 +25,7 @@ export default function HomePage() {
     }
   };
 
-  const genres = ['', 'Horror', 'Sci-Fi', 'Comedy', 'Action', 'Drama'];
+  const genres = ['', 'Action', 'Drama', 'Comedy', 'Horror', 'Sci-Fi', 'Thriller', 'Animation', 'Romance', 'Adventure', 'Family', 'Crime', 'Mystery', 'Fantasy', 'Biography'];
 
   useEffect(() => {
     fetchMovies();

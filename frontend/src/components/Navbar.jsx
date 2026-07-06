@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { Film, MapPin, Search, Ticket, ShieldAlert, LogIn, LogOut, User, QrCode } from 'lucide-react';
+import { Film, MapPin, Search, Ticket, ShieldAlert, LogIn, LogOut, User, QrCode, BookOpen } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
@@ -131,6 +131,10 @@ export default function Navbar() {
           
           <Link to="/my-tickets" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '0.95rem' }}>
             <Ticket size={18} color="var(--gold-primary)" /> Tiket Saya
+          </Link>
+
+          <Link to="/my-bookings" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '0.95rem' }}>
+            <BookOpen size={18} color="var(--cyan-accent)" /> Riwayat
           </Link>
 
           {(user?.role === 'CASHIER' || user?.role === 'ADMIN') && (

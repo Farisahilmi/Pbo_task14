@@ -173,7 +173,7 @@ public class DataSeeder {
         m2.ageRating = "17+";
         m2.language = "English / Sub ID";
         m2.posterUrl = "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg";
-        m2.trailerUrl = "https://www.youtube.com/watch?v=73_PeL2gcqA";
+        m2.trailerUrl = "https://www.youtube.com/watch?v=73_1biulkYk?si=NTb3-4dr78llOwJa";
         m2.releaseDate = LocalDate.of(2026, 7, 7);
         m2.status = "NOW_SHOWING";
         m2.persist();
@@ -187,7 +187,7 @@ public class DataSeeder {
         m3.ageRating = "SU";
         m3.language = "English / Sub ID";
         m3.posterUrl = "https://image.tmdb.org/t/p/w500/wWba3TaojhK7NdycRhoQpsG0FaH.jpg";
-        m3.trailerUrl = "https://www.youtube.com/watch?v=qMPn4i-aY78";
+        m3.trailerUrl = "https://www.youtube.com/watch?v=qQlr9-rF32A?si=qHF-TQRz_UOzmSIE";
         m3.releaseDate = LocalDate.of(2026, 6, 20);
         m3.status = "NOW_SHOWING";
         m3.persist();
@@ -201,7 +201,7 @@ public class DataSeeder {
         m4.ageRating = "13+";
         m4.language = "English / Sub ID";
         m4.posterUrl = "https://image.tmdb.org/t/p/w500/hU42CRk14JuPEdqZG3AWmagiPAP.jpg";
-        m4.trailerUrl = "https://www.youtube.com/watch?v=s5R-2T4i9bY";
+        m4.trailerUrl = "https://www.youtube.com/watch?v=YPY7J-flzE8?si=TvEK42lL4Drm_f-U";
         m4.releaseDate = LocalDate.of(2026, 6, 26);
         m4.status = "NOW_SHOWING";
         m4.persist();
@@ -229,7 +229,7 @@ public class DataSeeder {
         m6.ageRating = "13+";
         m6.language = "English / Sub ID";
         m6.posterUrl = "https://image.tmdb.org/t/p/w500/pjnD08FlMAIXsfOLKQbvmO0f0MD.jpg";
-        m6.trailerUrl = null; // Trailer resmi belum terverifikasi — update manual via: UPDATE movies SET trailer_url='...' WHERE title='Twisters'
+        m6.trailerUrl = "https://www.youtube.com/watch?v=wdok0rZdmx4?si=1AQtE5q3QLYSSfXL";
         m6.releaseDate = LocalDate.of(2026, 7, 10);
         m6.status = "NOW_SHOWING";
         m6.persist();

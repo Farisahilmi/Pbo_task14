@@ -9,6 +9,7 @@ import MovieDetailPage from './pages/MovieDetailPage';
 import SeatSelectionPage from './pages/SeatSelectionPage';
 import CheckoutPage from './pages/CheckoutPage';
 import MyTicketsPage from './pages/MyTicketsPage';
+import MyBookingsPage from './pages/MyBookingsPage';
 import TicketScannerPage from './pages/TicketScannerPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import GoogleAuthCallbackPage from './pages/GoogleAuthCallbackPage';
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/showtime/:showtimeId/seats" element={<SeatSelectionPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/my-tickets" element={<MyTicketsPage />} />
+          <Route path="/my-bookings" element={<MyBookingsPage />} />
           <Route path="/scanner" element={<TicketScannerPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/auth/google/success" element={<GoogleAuthCallbackPage onLoginSuccess={handleAuthSuccess} />} />

@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Clock, Calendar, MapPin, Play, Star, Sparkles, Shield, Tag, ArrowLeft, Video } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import ReviewSection from '../components/ReviewSection';
 
 export default function MovieDetailPage() {
   const { city } = useApp();
@@ -280,6 +281,11 @@ export default function MovieDetailPage() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Rating & Ulasan */}
+      <div className="container">
+        <ReviewSection movieId={id} />
       </div>
 
       {/* Trailer Modal — fixed YouTube embed */}
