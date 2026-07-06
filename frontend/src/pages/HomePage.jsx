@@ -3,6 +3,7 @@ import axios from 'axios';
 import MovieCard from '../components/MovieCard';
 import { Film, Play, X, Star, Sparkles, Filter, Ticket, Flame } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { MovieCardSkeleton } from '../components/Skeleton';
 
 export default function HomePage() {
   const { city, searchTerm } = useApp();
@@ -51,7 +52,7 @@ export default function HomePage() {
   const featuredMovie = movies.length > 0 ? movies[0] : null;
 
   return (
-    <div>
+    <div className="page-transition">
       {/* Hero Featured Movie Banner */}
       {featuredMovie && activeTab === 'NOW_SHOWING' && !selectedGenre && (
         <div style={{
@@ -173,9 +174,12 @@ export default function HomePage() {
 
         {/* Movies Grid */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-secondary)' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}><Film size={40} color="var(--gold-primary)" className="animate-spin" /></div>
-            <p>Memuat katalog film Luxury Cinema...</p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gap: '30px'
+          }}>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <MovieCardSkeleton key={i} />)}
           </div>
         ) : movies.length === 0 ? (
           <div className="glass-card" style={{ textAlign: 'center', padding: '60px', maxWidth: '500px', margin: '40px auto' }}>

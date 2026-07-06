@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Star, Send, MessageCircle, User, Loader, CheckCircle, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import { ReviewSkeleton } from '../components/Skeleton';
 
 function StarRating({ value, onChange, readOnly = false, size = 24 }) {
   const [hovered, setHovered] = useState(0);
@@ -38,14 +40,15 @@ function StarRating({ value, onChange, readOnly = false, size = 24 }) {
   );
 }
 
-export default function ReviewSection({ movieId }) {
+export default function ReviewSection({ movieId: movieIdProp }) {
+  const movieId = Number(movieIdProp); // useParams() returns string, ensure it's a number
   const { user } = useAuth();
+  const { toast } = useToast();
   const [data, setData] = useState({ reviews: [], averageRating: 0, totalReviews: 0 });
   const [myReview, setMyReview] = useState({ hasReviewed: false, rating: 0, comment: '' });
   const [form, setForm] = useState({ rating: 0, comment: '' });
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [feedback, setFeedback] = useState(null); // { type: 'success'|'error', msg }
+  const [submitting, setSubmitting] = useState(false); // { type: 'success'|'error', msg }
 
   const userId = user?.id ?? user?.userId;
 
@@ -78,22 +81,21 @@ export default function ReviewSection({ movieId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.rating) {
-      setFeedback({ type: 'error', msg: 'Pilih rating bintang terlebih dahulu!' });
+      toast('Pilih rating bintang terlebih dahulu!', 'warning');
       return;
     }
     setSubmitting(true);
-    setFeedback(null);
     try {
       await axios.post(`/api/v1/movies/${movieId}/reviews`, {
         rating: form.rating,
         comment: form.comment,
         userId
       });
-      setFeedback({ type: 'success', msg: myReview.hasReviewed ? 'Ulasan berhasil diperbarui!' : 'Ulasan berhasil dikirim!' });
+      toast(myReview.hasReviewed ? 'Ulasan berhasil diperbarui!' : 'Ulasan berhasil dikirim!', 'success');
       setMyReview({ hasReviewed: true, ...form });
       fetchReviews();
     } catch (err) {
-      setFeedback({ type: 'error', msg: err.response?.data?.error || 'Gagal mengirim ulasan' });
+      toast(err.response?.data?.error || 'Gagal mengirim ulasan', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -144,56 +146,34 @@ export default function ReviewSection({ movieId }) {
               {myReview.hasReviewed ? '✏️ Perbarui ulasan Anda' : '⭐ Tulis ulasan Anda'}
             </h3>
 
-            {/* Star Picker */}
-            <div style={{ marginBottom: '16px' }}>
-              <StarRating value={form.rating} onChange={(v) => setForm(f => ({ ...f, rating: v }))} size={32} />
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: '4px' }}>
-                {form.rating === 1 ? 'Sangat Buruk' : form.rating === 2 ? 'Buruk' : form.rating === 3 ? 'Biasa' : form.rating === 4 ? 'Bagus' : form.rating === 5 ? 'Luar Biasa!' : 'Pilih rating'}
-              </span>
-            </div>
-
-            {/* Comment */}
-            <textarea
-              value={form.comment}
-              onChange={(e) => setForm(f => ({ ...f, comment: e.target.value }))}
-              placeholder="Bagikan pendapat Anda tentang film ini... (opsional)"
-              rows={3}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
+              <StarRating value={form.rating} onChange={(r) => setForm({ ...form, rating: r })} size={32} />
+              <textarea
+                placeholder="Bagikan pendapatmu tentang film ini..."
+                value={form.comment}
+                onChange={e => setForm({ ...form, comment: e.target.value })}
               style={{
                 width: '100%',
+                minHeight: '100px',
                 background: 'var(--bg-tertiary)',
                 border: '1px solid var(--border-glass)',
                 borderRadius: 'var(--radius-md)',
+                padding: '16px',
                 color: 'var(--text-primary)',
-                padding: '12px 16px',
-                fontSize: '0.9rem',
                 resize: 'vertical',
-                marginBottom: '16px',
-                fontFamily: 'inherit',
                 outline: 'none',
-                transition: 'border-color 0.2s ease'
+                fontFamily: 'inherit'
               }}
-              onFocus={(e) => e.target.style.borderColor = 'var(--gold-primary)'}
-              onBlur={(e) => e.target.style.borderColor = 'var(--border-glass)'}
+              onFocus={e => e.target.style.borderColor = 'var(--gold-primary)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border-glass)'}
             />
+          </div>
 
-            {/* Feedback */}
-            {feedback && (
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: '8px',
-                padding: '10px 14px', borderRadius: 'var(--radius-sm)', marginBottom: '12px',
-                background: feedback.type === 'success' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                border: `1px solid ${feedback.type === 'success' ? '#10b981' : '#ef4444'}`,
-                color: feedback.type === 'success' ? '#10b981' : '#ef4444',
-                fontSize: '0.85rem'
-              }}>
-                {feedback.type === 'success' ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
-                {feedback.msg}
-              </div>
-            )}
-
-            <button type="submit" className="btn-gold" disabled={submitting} style={{ padding: '10px 24px' }}>
-              {submitting ? <><Loader size={16} className="animate-spin" /> Mengirim...</> : <><Send size={16} /> {myReview.hasReviewed ? 'Perbarui Ulasan' : 'Kirim Ulasan'}</>}
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button type="submit" className="btn-gold" disabled={submitting} style={{ padding: '10px 24px' }}>
+                {submitting ? <><Loader size={16} className="animate-spin" /> Mengirim...</> : <><Send size={16} /> {myReview.hasReviewed ? 'Perbarui Ulasan' : 'Kirim Ulasan'}</>}
+              </button>
+            </div>
           </div>
         </form>
       ) : (
@@ -204,18 +184,19 @@ export default function ReviewSection({ movieId }) {
       )}
 
       {/* Reviews List */}
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
-          <Loader size={24} className="animate-spin" />
-        </div>
-      ) : data.reviews.length === 0 ? (
-        <div className="glass-card" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
-          <MessageCircle size={40} style={{ margin: '0 auto 12px auto', display: 'block' }} />
-          <p>Belum ada ulasan. Jadilah yang pertama memberikan ulasan!</p>
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {data.reviews.map(review => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {loading ? (
+          <>
+            <ReviewSkeleton />
+            <ReviewSkeleton />
+          </>
+        ) : data.reviews.length === 0 ? (
+          <div className="glass-card" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <MessageCircle size={40} style={{ margin: '0 auto 12px auto', display: 'block' }} />
+            <p>Belum ada ulasan. Jadilah yang pertama memberikan ulasan!</p>
+          </div>
+        ) : (
+          data.reviews.map(review => (
             <div key={review.id} className="glass-card animate-fade-in" style={{ padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
                 {/* Avatar */}
@@ -249,9 +230,9 @@ export default function ReviewSection({ movieId }) {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </div>
   );
 }

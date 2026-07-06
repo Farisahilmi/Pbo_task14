@@ -5,6 +5,7 @@ import PaymentModal from '../components/PaymentModal';
 import TicketQRModal from '../components/TicketQRModal';
 import { Clock, ShieldCheck, Tag, CreditCard, ArrowLeft, CheckCircle, AlertTriangle, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 export default function CheckoutPage() {
   const { user } = useAuth();
@@ -24,6 +25,7 @@ export default function CheckoutPage() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [error, setError] = useState(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!lockData || !selectedSeats || selectedSeats.length === 0) {
@@ -43,7 +45,7 @@ export default function CheckoutPage() {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          alert('Waktu penguncian kursi telah habis! Silakan pilih kursi kembali.');
+          toast('Waktu penguncian kursi telah habis! Silakan pilih kursi kembali.', 'warning', 5000);
           navigate(`/showtime/${showtimeId}/seats`);
           return 0;
         }
@@ -104,9 +106,17 @@ export default function CheckoutPage() {
 
       const res = await axios.post('/api/v1/bookings', payload);
       setCreatedBooking(res.data);
-      setShowPaymentModal(true);
+      if (paymentMethod === 'QRIS') {
+        setShowQRModal(true);
+        toast('Pemesanan berhasil! Silakan scan QR untuk membayar.', 'success');
+      } else {
+        toast('Pemesanan berhasil!', 'success');
+        setTimeout(() => navigate('/my-tickets'), 2000);
+      }
     } catch (err) {
-      setError(err.response?.data?.error || 'Gagal membuat pesanan. Sesi penguncian mungkin sudah habis.');
+      const msg = err.response?.data?.error || 'Gagal membuat pesanan. Sesi penguncian mungkin sudah habis.';
+      setError(msg);
+      toast(msg, 'error');
     } finally {
       setLoadingBooking(false);
     }
@@ -135,7 +145,11 @@ export default function CheckoutPage() {
   if (!lockData || !selectedSeats) return null;
 
   return (
-    <div className="container" style={{ padding: '40px 24px' }}>
+    <div className="container page-transition" style={{ padding: '40px 24px', maxWidth: '1100px' }}>
+      <button onClick={() => navigate(-1)} className="btn-glass" style={{ padding: '8px 16px', fontSize: '0.85rem', marginBottom: '24px' }}>
+        <ArrowLeft size={16} /> Kembali
+      </button>
+
       {/* Timer Bar */}
       <div style={{
         background: 'linear-gradient(135deg, rgba(245, 197, 24, 0.15), rgba(229, 9, 20, 0.15))',

@@ -70,9 +70,55 @@ public class BookingResource {
     @Path("/my-bookings")
     public Response getMyBookings(@Context SecurityContext sec, @QueryParam("userId") Long paramUserId) {
         Long uid = getUserIdOrDefault(sec, paramUserId);
-        List<Booking> list = Booking.findByUser(uid);
-        return Response.ok(list).build();
+        List<Booking> bookings = Booking.findByUser(uid);
+
+        // Enrich each booking with showtime & movie details
+        List<Map<String, Object>> enriched = bookings.stream().map(b -> {
+            Map<String, Object> m = new java.util.LinkedHashMap<>();
+            m.put("id", b.id);
+            m.put("bookingCode", b.bookingCode);
+            m.put("userId", b.userId);
+            m.put("showtimeId", b.showtimeId);
+            m.put("status", b.status);
+            m.put("totalAmount", b.totalAmount);
+            m.put("discountAmount", b.discountAmount);
+            m.put("finalAmount", b.finalAmount);
+            m.put("promoCode", b.promoCode);
+            m.put("paymentMethod", b.paymentMethod);
+            m.put("createdAt", b.createdAt);
+            m.put("expiredAt", b.expiredAt);
+            m.put("paidAt", b.paidAt);
+
+            // Enrich with showtime & movie info
+            try {
+                com.movietickets.entity.Showtime st = com.movietickets.entity.Showtime.findById(b.showtimeId);
+                if (st != null) {
+                    m.put("startTime", st.startTime);
+                    m.put("format", st.format);
+                    com.movietickets.entity.Studio studio = com.movietickets.entity.Studio.findById(st.studioId);
+                    if (studio != null) {
+                        m.put("studioName", studio.name);
+                        com.movietickets.entity.Cinema cinema = com.movietickets.entity.Cinema.findById(studio.cinemaId);
+                        if (cinema != null) {
+                            m.put("cinemaName", cinema.name);
+                            m.put("cinemaCity", cinema.city);
+                        }
+                    }
+                    com.movietickets.entity.Movie movie = com.movietickets.entity.Movie.findById(st.movieId);
+                    if (movie != null) {
+                        m.put("movieTitle", movie.title);
+                        m.put("moviePosterUrl", movie.posterUrl);
+                    }
+                }
+            } catch (Exception e) {
+                // silent fail — still return booking without enrichment
+            }
+            return m;
+        }).collect(java.util.stream.Collectors.toList());
+
+        return Response.ok(enriched).build();
     }
+
 
     @DELETE
     @Path("/{id}")

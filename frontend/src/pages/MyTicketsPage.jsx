@@ -41,8 +41,8 @@ export default function MyTicketsPage() {
   };
 
   return (
-    <div className="container" style={{ padding: '40px 24px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+    <div className="container page-transition" style={{ padding: '40px 24px', maxWidth: '1000px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '2.4rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Ticket size={32} color="var(--gold-primary)" /> E-Ticket Saya

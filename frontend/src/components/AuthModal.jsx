@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { LogIn, UserPlus, X, Mail, Lock, User, Phone, Calendar, AlertCircle, Info } from 'lucide-react';
 import axios from 'axios';
 import GoogleSignInButton from './GoogleSignInButton';
+import { useToast } from '../context/ToastContext';
 
 export default function AuthModal({ onClose, onSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -36,10 +38,13 @@ export default function AuthModal({ onClose, onSuccess }) {
         sessionStorage.setItem('mtx_token', res.data.token);
         sessionStorage.setItem('mtx_user', JSON.stringify(res.data));
         axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+        toast(isLogin ? `Selamat datang kembali, ${res.data.name}!` : 'Registrasi berhasil!', 'success');
         onSuccess(res.data);
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Terjadi kesalahan saat autentikasi');
+      const msg = err.response?.data?.error || 'Terjadi kesalahan saat autentikasi';
+      setError(msg);
+      toast(msg, 'error');
     } finally {
       setLoading(false);
     }

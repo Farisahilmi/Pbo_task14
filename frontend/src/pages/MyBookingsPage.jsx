@@ -3,6 +3,43 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { BookOpen, Clock, Calendar, MapPin, CreditCard, Film, RefreshCw, AlertCircle, CheckCircle2, XCircle, Hourglass, Ticket } from 'lucide-react';
+import { BookingCardSkeleton } from '../components/Skeleton';
+import { useToast } from '../context/ToastContext';
+
+// Simple countdown component
+function CountdownTimer({ expiredAt }) {
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    if (!expiredAt) return;
+    const calculate = () => {
+      const diff = new Date(expiredAt) - new Date();
+      setTimeLeft(Math.max(0, Math.floor(diff / 1000)));
+    };
+    calculate();
+    const timer = setInterval(calculate, 1000);
+    return () => clearInterval(timer);
+  }, [expiredAt]);
+
+  if (timeLeft <= 0) return <span style={{ color: 'var(--text-muted)' }}>Expired</span>;
+
+  const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  
+  return (
+    <span style={{ 
+      color: '#f59e0b', 
+      fontWeight: 'bold',
+      fontFamily: 'monospace',
+      fontSize: '1rem',
+      background: 'rgba(245, 158, 11, 0.1)',
+      padding: '2px 6px',
+      borderRadius: '4px'
+    }}>
+      {m}:{s}
+    </span>
+  );
+}
 
 const STATUS_CONFIG = {
   PAID: { label: 'PAID', color: '#10b981', bg: 'rgba(16,185,129,0.1)', icon: CheckCircle2 },
@@ -17,6 +54,7 @@ export default function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('ALL');
+  const { toast } = useToast();
 
   const userId = user?.id ?? user?.userId;
 
@@ -47,6 +85,7 @@ export default function MyBookingsPage() {
       setBookings(enriched);
     } catch (err) {
       console.error('Error fetching bookings:', err);
+      toast('Gagal memuat riwayat pemesanan', 'error');
     } finally {
       setLoading(false);
     }
@@ -74,7 +113,7 @@ export default function MyBookingsPage() {
   }
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '900px' }}>
+    <div className="container page-transition" style={{ padding: '40px 24px', maxWidth: '900px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
@@ -119,9 +158,8 @@ export default function MyBookingsPage() {
 
       {/* List */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--text-secondary)' }}>
-          <Film size={40} color="var(--gold-primary)" className="animate-spin" style={{ margin: '0 auto 12px', display: 'block' }} />
-          Memuat riwayat pemesanan...
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {[1, 2, 3].map(i => <BookingCardSkeleton key={i} />)}
         </div>
       ) : filtered.length === 0 ? (
         <div className="glass-card" style={{ padding: '60px', textAlign: 'center' }}>
@@ -210,9 +248,10 @@ export default function MyBookingsPage() {
                           Menunggu pembayaran
                         </span>
                         {booking.expiredAt && (
-                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                            Exp: {new Date(booking.expiredAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-                          </span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Sisa Waktu:</span>
+                            <CountdownTimer expiredAt={booking.expiredAt} />
+                          </div>
                         )}
                       </div>
                     )}

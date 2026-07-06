@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { Clock, Tag, Play, Ticket, Calendar } from 'lucide-react';
+import { Clock, Tag, Play, Ticket, Calendar, Star } from 'lucide-react';
 
 export default function MovieCard({ movie, onOpenTrailer }) {
   const isNowShowing = movie.status === 'NOW_SHOWING';
+  const [rating, setRating] = useState(null); // { avg, count }
+
+  useEffect(() => {
+    axios.get(`/api/v1/movies/${movie.id}/reviews`)
+      .then(res => {
+        if (res.data.totalReviews > 0) {
+          setRating({ avg: res.data.averageRating, count: res.data.totalReviews });
+        }
+      })
+      .catch(() => {}); // silent fail
+  }, [movie.id]);
 
   return (
     <div className="glass-card animate-fade-in" style={{
@@ -77,9 +89,29 @@ export default function MovieCard({ movie, onOpenTrailer }) {
 
       {/* Content */}
       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <h3 style={{ fontSize: '1.15rem', marginBottom: '8px', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        <h3 style={{ fontSize: '1.15rem', marginBottom: '6px', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {movie.title}
         </h3>
+
+        {/* Rating Stars */}
+        {rating ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '8px' }}>
+            {[1,2,3,4,5].map(s => (
+              <Star
+                key={s}
+                size={13}
+                fill={s <= Math.round(rating.avg) ? '#f59e0b' : 'transparent'}
+                color={s <= Math.round(rating.avg) ? '#f59e0b' : 'var(--text-muted)'}
+                strokeWidth={1.5}
+              />
+            ))}
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginLeft: '2px' }}>
+              {rating.avg.toFixed(1)} ({rating.count})
+            </span>
+          </div>
+        ) : (
+          <div style={{ height: '21px', marginBottom: '8px' }} />
+        )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '12px' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>

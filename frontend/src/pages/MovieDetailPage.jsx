@@ -104,7 +104,7 @@ export default function MovieDetailPage() {
   });
 
   return (
-    <div>
+    <div className="page-transition">
       {/* Back button */}
       <div className="container" style={{ marginTop: '20px', marginBottom: '20px' }}>
         <button onClick={() => navigate(-1)} className="btn-glass" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
