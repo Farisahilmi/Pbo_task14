@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff3366"/>
+      <stop offset="100%" stop-color="#cc00ff"/>
+    </linearGradient>
+    <mask id="ticket-mask">
+      <rect x="0" y="0" width="100" height="100" fill="white" />
+      <circle cx="10" cy="50" r="10" fill="black" />
+      <circle cx="90" cy="50" r="10" fill="black" />
+    </mask>
+  </defs>
+  <rect x="10" y="25" width="80" height="50" rx="5" fill="url(#grad)" mask="url(#ticket-mask)" />
+  <line x1="35" y1="27" x2="35" y2="73" stroke="white" stroke-width="3" stroke-dasharray="4,4" />
+  <circle cx="55" cy="50" r="6" fill="white" />
+  <circle cx="70" cy="50" r="6" fill="white" />
+</svg>
