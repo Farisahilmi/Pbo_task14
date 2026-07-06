@@ -1,0 +1,19 @@
+-- V1.0.9__seed_accurate_movies.sql
+
+INSERT INTO movies (tmdb_id, title, synopsis, genre, duration_minutes, age_rating, language, poster_url, trailer_url, release_date, status) VALUES 
+(1022789, 'Inside Out 2', 'Kembali ke benak Riley yang kini menginjak masa remaja, Markas Besar mengalami pembongkaran mendadak untuk memberi ruang bagi sesuatu yang sama sekali tidak terduga: Emosi baru! Joy, Sadness, Anger, Fear, dan Disgust kini harus menghadapi kedatangan Anxiety dan kawan-kawan barunya.', 'Animasi, Petualangan, Komedi, Keluarga', 97, '13+', 'English / Sub ID', 'https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg', 'https://www.youtube.com/watch?v=LEjhY15eCx0', '2026-06-11', 'NOW_SHOWING');
+
+INSERT INTO movies (tmdb_id, title, synopsis, genre, duration_minutes, age_rating, language, poster_url, trailer_url, release_date, status) VALUES 
+(533535, 'Deadpool & Wolverine', 'Wade Wilson yang lesu bekerja keras dalam kehidupan sipil dengan hari-harinya sebagai tentara bayaran yang fleksibel secara moral, Deadpool, di belakangnya. Namun ketika dunia asalnya menghadapi ancaman eksistensial, Wade terpaksa harus kembali bekerja sama dengan Wolverine yang bahkan lebih enggan.', 'Aksi, Komedi, Cerita Fiksi', 128, '17+', 'English / Sub ID', 'https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg', 'https://www.youtube.com/watch?v=73_PeL2gcqA', '2026-07-24', 'NOW_SHOWING');
+
+INSERT INTO movies (tmdb_id, title, synopsis, genre, duration_minutes, age_rating, language, poster_url, trailer_url, release_date, status) VALUES 
+(519182, 'Despicable Me 4', 'Gru dan keluarganya menyambut anggota baru, Gru Jr., yang berniat menyiksa ayahnya. Namun, kedamaian mereka terusik saat dalang kriminal Maxime Le Mal kabur dari penjara dan bersumpah akan membalas dendam.', 'Animasi, Komedi, Aksi, Cerita Fiksi, Keluarga', 94, 'SU', 'English / Sub ID', 'https://image.tmdb.org/t/p/w500/wWba3TaojhK7NdycRhoQpsG0FaH.jpg', 'https://www.youtube.com/watch?v=qMPn4i-aY78', '2026-06-20', 'NOW_SHOWING');
+
+INSERT INTO movies (tmdb_id, title, synopsis, genre, duration_minutes, age_rating, language, poster_url, trailer_url, release_date, status) VALUES 
+(762441, 'A Quiet Place: Day One', 'Saat Kota New York diserbu oleh makhluk asing yang berburu melalui suara, seorang wanita bernama Sam berjuang untuk bertahan hidup bersama kucingnya.', 'Kengerian, Cerita Fiksi, Cerita Seru', 100, '13+', 'English / Sub ID', 'https://image.tmdb.org/t/p/w500/hU42CRk14JuPEdqZG3AWmagiPAP.jpg', 'https://www.youtube.com/watch?v=s5R-2T4i9bY', '2026-06-26', 'NOW_SHOWING');
+
+INSERT INTO movies (tmdb_id, title, synopsis, genre, duration_minutes, age_rating, language, poster_url, trailer_url, release_date, status) VALUES 
+(573435, 'Bad Boys: Ride or Die', 'Detektif Miami Mike Lowrey dan Marcus Burnett kembali beraksi. Kali ini mereka harus membersihkan nama mendiang Kapten Conrad Howard yang dituduh korupsi, yang membuat mereka berdua menjadi buronan.', 'Aksi, Komedi, Kejahatan', 116, '17+', 'English / Sub ID', 'https://image.tmdb.org/t/p/w500/oGythE98MYleE6mZlGs5oBGkux1.jpg', 'https://www.youtube.com/watch?v=hRFY_Fesa9Q', '2026-06-05', 'NOW_SHOWING');
+
+INSERT INTO movies (tmdb_id, title, synopsis, genre, duration_minutes, age_rating, language, poster_url, trailer_url, release_date, status) VALUES 
+(718821, 'Twisters', 'Saat musim badai meningkat, jalan mantan pemburu badai Kate Carter dan superstar media sosial yang sembrono Tyler Owens bertabrakan ketika fenomena mengerikan yang belum pernah terlihat sebelumnya dilepaskan. Pasangan dan tim mereka yang bersaing menemukan diri mereka tepat di jalur beberapa sistem badai yang bertemu di atas Oklahoma.', 'Aksi, Cerita Seru', 123, '13+', 'English / Sub ID', 'https://image.tmdb.org/t/p/w500/pjnD08FlMAIXsfOLKQbvmO0f0MD.jpg', NULL, '2026-07-10', 'NOW_SHOWING');
